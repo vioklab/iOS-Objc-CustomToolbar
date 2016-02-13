@@ -13,7 +13,21 @@
     UIImage* toolbarImage;
     
     UIImage* barInfoButtonImage;
-    UIBarButtonItem *barInfoButton;
+    UIButton *barInfoButton;
+    UIBarButtonItem *barInfoButtonItem;
+    
+    UIImage* barAudioButtonImage;
+    UIButton *barAudioButton;
+    UIBarButtonItem *barAudioButtonItem;
+    
+    UIImage* barShareButtonImage;
+    UIButton *barShareButton;
+    UIBarButtonItem *barShareButtonItem;
+    
+    UIImage* barDeleteButtonImage;
+    UIButton *barDeleteButton;
+    UIBarButtonItem *barDeleteButtonItem;
+    
 }
 @end
 
@@ -33,26 +47,55 @@
     toolbar.clipsToBounds = YES;
     
     // Toolbar Buttons with images
-    barInfoButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-info"];
-    barInfoButton = [[UIBarButtonItem alloc] initWithImage:barInfoButtonImage style:UIBarButtonItemStyleDone target:nil action:@selector(infoButtonPressed:)];
-    barInfoButton.tintColor = [UIColor whiteColor];
+    barInfoButtonImage = [UIImage imageNamed:@"icons_takephoto-toolbar-info"];
+    CGRect frameimg = CGRectMake(0, 0, barInfoButtonImage.size.width, barInfoButtonImage.size.height);
+    barInfoButton = [[UIButton alloc] initWithFrame:frameimg];
+    [barInfoButton setBackgroundImage:barInfoButtonImage forState:UIControlStateNormal];
+    [barInfoButton addTarget:self action:@selector(infoButtonPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
+    [barInfoButton setShowsTouchWhenHighlighted:NO];
+    barInfoButtonItem =[[UIBarButtonItem alloc] initWithCustomView:barInfoButton];
+    self.navigationItem.rightBarButtonItem=barInfoButtonItem;
     
     
-    UIImage* barAudioButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-audio"];
-    UIBarButtonItem *barAudioButton = [[UIBarButtonItem alloc] initWithImage:barAudioButtonImage style:UIBarButtonItemStyleDone target:nil action:nil];
-    barAudioButton.tintColor = [UIColor whiteColor];
+    barAudioButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-audio"];
+    frameimg = CGRectMake(0, 0, barAudioButtonImage.size.width, barAudioButtonImage.size.height);
+    barAudioButton = [[UIButton alloc] initWithFrame:frameimg];
+    [barAudioButton setBackgroundImage:barAudioButtonImage forState:UIControlStateNormal];
+    [barAudioButton addTarget:self action:@selector(audioButtonPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
+    [barAudioButton setShowsTouchWhenHighlighted:YES];
     
-    UIImage* barShareButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-share"];
-    UIBarButtonItem *barShareButton = [[UIBarButtonItem alloc] initWithImage:barShareButtonImage style:UIBarButtonItemStyleDone target:nil action:nil];
-    barShareButton.tintColor = [UIColor whiteColor];
+    barAudioButtonItem =[[UIBarButtonItem alloc] initWithCustomView:barAudioButton];
+    self.navigationItem.rightBarButtonItem=barAudioButtonItem;
     
-    UIImage* barDeleteButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-delete"];
-    UIBarButtonItem *barDeleteButton = [[UIBarButtonItem alloc] initWithImage:barDeleteButtonImage style:UIBarButtonItemStyleDone target:nil action:nil];
-    barDeleteButton.tintColor = [UIColor whiteColor];
+
+    barShareButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-share"];
+    frameimg = CGRectMake(0, 0, barShareButtonImage.size.width, barShareButtonImage.size.height);
+    barShareButton = [[UIButton alloc] initWithFrame:frameimg];
+    [barShareButton setBackgroundImage:barShareButtonImage forState:UIControlStateNormal];
+    [barShareButton addTarget:self action:@selector(shareButtonPressed:)
+             forControlEvents:UIControlEventTouchUpInside];
+    [barShareButton setShowsTouchWhenHighlighted:YES];
+    
+    barShareButtonItem =[[UIBarButtonItem alloc] initWithCustomView:barShareButton];
+    self.navigationItem.rightBarButtonItem=barShareButtonItem;
+    
+    barDeleteButtonImage = [UIImage imageNamed: @"icons_takephoto-toolbar-delete"];
+    frameimg = CGRectMake(0, 0, barDeleteButtonImage.size.width, barDeleteButtonImage.size.height);
+    barDeleteButton = [[UIButton alloc] initWithFrame:frameimg];
+    [barDeleteButton setBackgroundImage:barDeleteButtonImage forState:UIControlStateNormal];
+    [barDeleteButton addTarget:self action:@selector(deleteButtonPressed:)
+             forControlEvents:UIControlEventTouchUpInside];
+    [barDeleteButton setShowsTouchWhenHighlighted:YES];
+    
+    barDeleteButtonItem =[[UIBarButtonItem alloc] initWithCustomView:barDeleteButton];
+    self.navigationItem.rightBarButtonItem=barDeleteButtonItem;
+    
     
     UIBarButtonItem *flexSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     // Toolbars Buttons to Array
-    NSArray *toolbarButtons = [[NSArray alloc] initWithObjects:barInfoButton, barAudioButton, barShareButton, barDeleteButton, flexSpace, nil];
+    NSArray *toolbarButtons = [[NSArray alloc] initWithObjects:barInfoButtonItem, barAudioButtonItem, barShareButtonItem, barDeleteButtonItem, flexSpace, nil];
     // Set buttons as items
     toolbar.items = toolbarButtons;
     // Set Toolbar Subview
@@ -62,12 +105,89 @@
     
 }
 
--(void)infoButtonPressed:(UIBarButtonItem *)sender
-{
-    //NSLog(@"%@",sender);
-    UIImage* backgroundImage = [UIImage imageNamed: @"icons_takephoto-toolbar-info-highlighted"];
-    [barInfoButton setImage:backgroundImage];
-}
+- (void)infoButtonPressed:(id)sender{
+    UIButton*btn = (UIButton*)sender;
+    if (btn.isSelected)
+    {
+        [btn setSelected:NO];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
+    }
+    else
+    {
+        [btn setSelected:YES];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info-highlighted"] forState:UIControlStateNormal];
+        [barAudioButton setSelected:NO];
+        [barAudioButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
+        [barShareButton setSelected:NO];
+        [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
+        [barDeleteButton setSelected:NO];
+        [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+    }
+};
+
+- (void)audioButtonPressed:(id)sender{
+    UIButton*btn = (UIButton*)sender;
+    if (btn.isSelected)
+    {
+        [btn setSelected:NO];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        [btn setSelected:YES];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio-highlighted"] forState:UIControlStateNormal];
+        [barInfoButton setSelected:NO];
+        [barInfoButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
+        [barShareButton setSelected:NO];
+        [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
+        [barDeleteButton setSelected:NO];
+        [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+    }
+};
+
+- (void)shareButtonPressed:(id)sender{
+    UIButton*btn = (UIButton*)sender;
+    if (btn.isSelected)
+    {
+        [btn setSelected:NO];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        [btn setSelected:YES];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share-highlighted"] forState:UIControlStateNormal];
+        [barInfoButton setSelected:NO];
+        [barInfoButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
+        [barAudioButton setSelected:NO];
+        [barAudioButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
+        [barDeleteButton setSelected:NO];
+        [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+    }
+};
+
+- (void)deleteButtonPressed:(id)sender{
+    UIButton*btn = (UIButton*)sender;
+    if (btn.isSelected)
+    {
+        [btn setSelected:NO];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        [btn setSelected:YES];
+        [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete-highlighted"] forState:UIControlStateNormal];
+        [barInfoButton setSelected:NO];
+        [barInfoButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
+        [barAudioButton setSelected:NO];
+        [barAudioButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
+        [barShareButton setSelected:NO];
+        [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
+    }
+};
+
 
 // Changing color Status bar to white
 -(UIStatusBarStyle)preferredStatusBarStyle
@@ -78,7 +198,7 @@
 // Hidding Status bar
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning {
