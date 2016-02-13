@@ -103,6 +103,13 @@
     // -????
     [toolbar release];
     
+    
+    // SUB NAV BAR
+    UIView *stn = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 257.5, self.view.frame.size.width, 200)];
+    stn.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0.6];
+    [self.view addSubview:stn];
+   
+    
 }
 
 - (void)infoButtonPressed:(id)sender{
@@ -177,6 +184,7 @@
     }
     else
     {
+        
         [btn setSelected:YES];
         [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete-highlighted"] forState:UIControlStateNormal];
         [barInfoButton setSelected:NO];
