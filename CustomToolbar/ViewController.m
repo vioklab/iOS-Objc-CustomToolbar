@@ -28,6 +28,8 @@
     UIButton *barDeleteButton;
     UIBarButtonItem *barDeleteButtonItem;
     
+    UIView *infoPanel;
+    
 }
 @end
 
@@ -105,11 +107,28 @@
     
     
     // SUB NAV BAR
-    UIView *stn = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 257.5, self.view.frame.size.width, 200)];
-    stn.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0.6];
-    [self.view addSubview:stn];
-   
+    infoPanel = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 257.5, self.view.frame.size.width, 200)];
+      infoPanel.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:0.6];
+    [self.view addSubview:infoPanel];
     
+    
+    infoPanel.alpha = 0;
+    infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y+100);
+    infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
+    
+    
+//    UIImage *infoIco1 = [UIImage imageNamed:@"icons_takephoto-info-date"];
+//    UIImage *infoIco2 = [UIImage imageNamed:@"icons_takephoto-info-time"];
+//    UIImage *infoIco3 = [UIImage imageNamed:@"icons_takephoto-info-mb"];
+//    UIImage *infoIco4 = [UIImage imageNamed:@"icons_takephoto-info-cloud"];
+//    UIImage *infoIco5 = [UIImage imageNamed:@"icons_takephoto-info-location"];
+//    UIImage *infoIco6 = [UIImage imageNamed:@"icons_takephoto-info-emotion"];
+    
+    UIImageView *imgview = [[UIImageView alloc]
+                            initWithFrame:CGRectMake(10, 10, 28, 28)];
+    [imgview setImage:[UIImage imageNamed:@"icons_takephoto-info-date"]];
+    [imgview setContentMode:UIViewContentModeScaleAspectFill];
+     [self.view addSubview:imgview];
 }
 
 - (void)infoButtonPressed:(id)sender{
@@ -118,6 +137,14 @@
     {
         [btn setSelected:NO];
         [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.2 animations:^{
+            infoPanel.alpha = 0;
+            infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y+100);
+            infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
+            
+        } completion:^(BOOL finished) {
+           
+        }];
     }
     else
     {
@@ -129,6 +156,16 @@
         [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
         [barDeleteButton setSelected:NO];
         [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+        // animation
+        [UIView animateWithDuration:0.2 animations:^{
+            infoPanel.alpha = 1;
+            infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y-100);
+            infoPanel.transform = CGAffineTransformMakeScale(1.0, 1.0);
+            
+        } completion:^(BOOL finished) {
+            
+        }];
+        
     }
 };
 
