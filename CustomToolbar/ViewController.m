@@ -28,6 +28,7 @@
     UIBarButtonItem *barDeleteButtonItem;
     
     CLLocationManager *locationManager;
+    CLLocation *actualLocation;
 }
 @end
 
@@ -51,21 +52,24 @@ int mapSpan = 0;
     [self set_infoDisplay];
     
     // MAP VIEW
-    mapView.delegate = self;
-    mapView.showsUserLocation = YES;
-    mapView.showsBuildings = YES;
     
-    locationManager = [CLLocationManager new];
-    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]){
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+
+    // check before requesting, otherwise it might crash in older version
+    if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        
         [locationManager requestWhenInUseAuthorization];
-       
+        
     }
     [locationManager startUpdatingLocation];
     
-    self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(mapSpan, self.infoPanel.bounds.size.height-mapHeight, self.infoPanel.bounds.size.width-(mapSpan*2), mapHeight-mapSpan)];
-    [infoPanel addSubview:self.mapView];
     
-    
+}
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    MKMapCamera *camera = [MKMapCamera cameraLookingAtCenterCoordinate:userLocation.coordinate fromEyeCoordinate:CLLocationCoordinate2DMake(userLocation.coordinate.latitude, userLocation.coordinate.longitude) eyeAltitude:100000];
+    [self.mapView setCamera: camera animated:YES];
 }
 
 - (void)set_imageToolbar{
@@ -225,6 +229,31 @@ int mapSpan = 0;
             infoPanel.transform = CGAffineTransformMakeScale(1.0, 1.0);
             
         } completion:nil];
+        
+        
+        mapView = [[MKMapView alloc] initWithFrame:CGRectMake(mapSpan, self.infoPanel.bounds.size.height-mapHeight, self.infoPanel.bounds.size.width-(mapSpan*2), mapHeight-mapSpan)];
+      
+        mapView.showsUserLocation = YES;
+        mapView.mapType = MKMapTypeStandard;
+        mapView.showsBuildings = YES;
+        
+        MKCoordinateRegion region;
+        MKCoordinateSpan span;
+        span.latitudeDelta = .01;
+        span.longitudeDelta = .01;
+        CLLocationCoordinate2D location;
+        location.latitude = actualLocation.coordinate.latitude;
+        location.longitude = actualLocation.coordinate.longitude;
+        region.span = span;
+        region.center = location;
+        
+        
+        
+        [infoPanel addSubview:self.mapView];
+        
+
+        
+
         
     }
 };
