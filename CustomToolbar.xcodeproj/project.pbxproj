@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C4FD8B31C73904B001A51CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C4FD8B21C73904B001A51CA /* MapKit.framework */; };
 		6CEDB4801C6F809C00B1F8E7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CEDB47F1C6F809C00B1F8E7 /* main.m */; };
 		6CEDB4831C6F809C00B1F8E7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CEDB4821C6F809C00B1F8E7 /* AppDelegate.m */; };
 		6CEDB4861C6F809C00B1F8E7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CEDB4851C6F809C00B1F8E7 /* ViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6C4FD8B21C73904B001A51CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		6CEDB47B1C6F809C00B1F8E7 /* CustomToolbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomToolbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CEDB47F1C6F809C00B1F8E7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6CEDB4811C6F809C00B1F8E7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -35,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C4FD8B31C73904B001A51CA /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +47,7 @@
 		6CEDB4721C6F809C00B1F8E7 = {
 			isa = PBXGroup;
 			children = (
+				6C4FD8B21C73904B001A51CA /* MapKit.framework */,
 				6CEDB47D1C6F809C00B1F8E7 /* CustomToolbar */,
 				6CEDB47C1C6F809C00B1F8E7 /* Products */,
 			);
