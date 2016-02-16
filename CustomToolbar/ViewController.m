@@ -40,25 +40,24 @@ float toolBarHeight = 57.5;
 float infoPanelHeight = 350.0;
 int mapHeight = 265;
 int mapSpan = 0;
+bool synchronized = false;
+bool infoDisplayOpen = false;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
     // SET TOOLBAR
-    [self set_imageToolbar];
+    [self set_navToolbar];
     
     // SET ICONS SUB NAV
     [self set_infoDisplay];
     
-    // MAP VIEW
-    
+    // MAP LOCATION MANAGER
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-
     // check before requesting, otherwise it might crash in older version
     if ([locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
-        
         [locationManager requestWhenInUseAuthorization];
         
     }
@@ -67,12 +66,9 @@ int mapSpan = 0;
     
 }
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    MKMapCamera *camera = [MKMapCamera cameraLookingAtCenterCoordinate:userLocation.coordinate fromEyeCoordinate:CLLocationCoordinate2DMake(userLocation.coordinate.latitude, userLocation.coordinate.longitude) eyeAltitude:100000];
-    [self.mapView setCamera: camera animated:YES];
-}
 
-- (void)set_imageToolbar{
+
+- (void)set_navToolbar{
     // TOOLBAR
     toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - toolBarHeight, self.view.frame.size.width, toolBarHeight)];
     toolbarImage = [UIImage imageNamed: @"barra"];
@@ -160,17 +156,23 @@ int mapSpan = 0;
     
     UIImage *imgIco1 = [UIImage imageNamed:@"icons_takephoto-info-date"];
     UIImageView *icoView1 = [[UIImageView alloc] initWithImage:imgIco1];
-    icoView1.center = CGPointMake(26, 22);
-    UILabel *icoLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(45, 13, 300, 20)];
+    icoView1.center = CGPointMake(26, 26);
+    UILabel *icoLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(45, 16, 300, 20)];
     icoLabel1.text = @"Wednesday, December 29th, 2015 - 11:00 AM";
     icoLabel1.textColor = subNavFontColor;
     icoLabel1.font = subNavFont;
     
     
-    UIImage *imgIco2 = [UIImage imageNamed:@"icons_takephoto-info-cloud"];
+    UIImage *imgIco2;
+    if (synchronized == true) {
+        imgIco2 = [UIImage imageNamed:@"icons_takephoto-info-cloud"];
+    } else {
+        imgIco2 = [UIImage imageNamed:@"icons_takephoto-info-cloud-unsyncronized"];
+    }
+    
     UIImageView *icoView2 = [[UIImageView alloc] initWithImage:imgIco2];
-    icoView2.center = CGPointMake(26, 55);
-    UILabel *icoLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(45, 46, 200, 20)];
+    icoView2.center = CGPointMake(26, 59);
+    UILabel *icoLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(45, 50, 200, 20)];
     icoLabel2.text = @"Synchronized";
     icoLabel2.textColor = subNavFontColor;
     icoLabel2.font = subNavFont;
@@ -178,8 +180,8 @@ int mapSpan = 0;
     
     UIImage *imgIco3 = [UIImage imageNamed:@"icons_takephoto-info-mb"];
     UIImageView *icoView3 = [[UIImageView alloc] initWithImage:imgIco3];
-    icoView3.center = CGPointMake(160, 54);
-    UILabel *icoLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(180, 46, 200, 20)];
+    icoView3.center = CGPointMake(160, 58);
+    UILabel *icoLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(180, 50, 200, 20)];
     icoLabel3.text = @"20.5 Mb";
     icoLabel3.textColor = subNavFontColor;
     icoLabel3.font = subNavFont;
@@ -199,18 +201,43 @@ int mapSpan = 0;
 
 }
 
+- (void)set_Map{
+    mapView = [[MKMapView alloc] initWithFrame:CGRectMake(mapSpan, self.infoPanel.bounds.size.height-mapHeight, self.infoPanel.bounds.size.width-(mapSpan*2), mapHeight-mapSpan)];
+    
+    mapView.showsUserLocation = YES;
+    mapView.mapType = MKMapTypeStandard;
+    mapView.showsBuildings = YES;
+    
+    MKCoordinateRegion region;
+    MKCoordinateSpan span;
+    span.latitudeDelta = .01;
+    span.longitudeDelta = .01;
+    CLLocationCoordinate2D location;
+    location.latitude = actualLocation.coordinate.latitude;
+    location.longitude = actualLocation.coordinate.longitude;
+    region.span = span;
+    region.center = location;
+    
+    [infoPanel addSubview:self.mapView];
+}
+
+-(void)closeInfoPanel{
+    [UIView animateWithDuration:0.2 animations:^{
+        infoPanel.alpha = 0;
+        infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y+(infoPanelHeight/2));
+        infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
+        
+    } completion:nil];
+    infoDisplayOpen = false;
+}
+
 - (void)infoButtonPressed:(id)sender{
     UIButton*btn = (UIButton*)sender;
     if (btn.isSelected)
     {
         [btn setSelected:NO];
         [btn setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-info"] forState:UIControlStateNormal];
-        [UIView animateWithDuration:0.2 animations:^{
-            infoPanel.alpha = 0;
-            infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y+(infoPanelHeight/2));
-            infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
-            
-        } completion:nil];
+        [self closeInfoPanel];
     }
     else
     {
@@ -223,40 +250,23 @@ int mapSpan = 0;
         [barDeleteButton setSelected:NO];
         [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
         // animation
-        [UIView animateWithDuration:0.2 animations:^{
-            infoPanel.alpha = 1;
-            infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y-(infoPanelHeight/2));
-            infoPanel.transform = CGAffineTransformMakeScale(1.0, 1.0);
+        if (infoDisplayOpen == false) {
+            [UIView animateWithDuration:0.2 animations:^{
+                infoPanel.alpha = 1;
+                infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y-(infoPanelHeight/2));
+                infoPanel.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                
+            } completion:nil];
             
-        } completion:nil];
+            // MAP METHOD
+            [self set_Map];
+            infoDisplayOpen = true;
+        }
         
-        
-        mapView = [[MKMapView alloc] initWithFrame:CGRectMake(mapSpan, self.infoPanel.bounds.size.height-mapHeight, self.infoPanel.bounds.size.width-(mapSpan*2), mapHeight-mapSpan)];
-      
-        mapView.showsUserLocation = YES;
-        mapView.mapType = MKMapTypeStandard;
-        mapView.showsBuildings = YES;
-        
-        MKCoordinateRegion region;
-        MKCoordinateSpan span;
-        span.latitudeDelta = .01;
-        span.longitudeDelta = .01;
-        CLLocationCoordinate2D location;
-        location.latitude = actualLocation.coordinate.latitude;
-        location.longitude = actualLocation.coordinate.longitude;
-        region.span = span;
-        region.center = location;
-        
-        
-        
-        [infoPanel addSubview:self.mapView];
-        
-
-        
-
         
     }
 };
+
 
 - (void)audioButtonPressed:(id)sender{
     UIButton*btn = (UIButton*)sender;
@@ -276,6 +286,7 @@ int mapSpan = 0;
         [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
         [barDeleteButton setSelected:NO];
         [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+        [self closeInfoPanel];
     }
 };
 
@@ -297,6 +308,7 @@ int mapSpan = 0;
         [barAudioButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
         [barDeleteButton setSelected:NO];
         [barDeleteButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-delete"] forState:UIControlStateNormal];
+        [self closeInfoPanel];
     }
 };
 
@@ -319,6 +331,7 @@ int mapSpan = 0;
         [barAudioButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-audio"] forState:UIControlStateNormal];
         [barShareButton setSelected:NO];
         [barShareButton setBackgroundImage:[UIImage imageNamed:@"icons_takephoto-toolbar-share"] forState:UIControlStateNormal];
+        [self closeInfoPanel];
     }
 };
 
