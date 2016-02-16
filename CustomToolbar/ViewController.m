@@ -117,18 +117,38 @@
     infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
     
     
-//    UIImage *infoIco1 = [UIImage imageNamed:@"icons_takephoto-info-date"];
-//    UIImage *infoIco2 = [UIImage imageNamed:@"icons_takephoto-info-time"];
-//    UIImage *infoIco3 = [UIImage imageNamed:@"icons_takephoto-info-mb"];
-//    UIImage *infoIco4 = [UIImage imageNamed:@"icons_takephoto-info-cloud"];
-//    UIImage *infoIco5 = [UIImage imageNamed:@"icons_takephoto-info-location"];
-//    UIImage *infoIco6 = [UIImage imageNamed:@"icons_takephoto-info-emotion"];
+    // ICONS SUB NAV
     
-    UIImageView *imgview = [[UIImageView alloc]
-                            initWithFrame:CGRectMake(10, 10, 28, 28)];
-    [imgview setImage:[UIImage imageNamed:@"icons_takephoto-info-date"]];
-    [imgview setContentMode:UIViewContentModeScaleAspectFill];
-     [self.view addSubview:imgview];
+    
+    UIImage *imgIco1 = [UIImage imageNamed:@"icons_takephoto-info-date"];
+    UIImageView *icoView1 = [[UIImageView alloc] initWithImage:imgIco1];
+    icoView1.center = CGPointMake(26, 26);
+    UILabel *fromLabel = [[UILabel alloc]initWithFrame:CGRectMake(36, 26, 100, 50)];
+    fromLabel.text = @"Sunday, March 29th";
+    
+    
+    UIImage *imgIco2 = [UIImage imageNamed:@"icons_takephoto-info-time"];
+    UIImageView *icoView2 = [[UIImageView alloc] initWithImage:imgIco2];
+    icoView2.center = CGPointMake(26, 71);
+    
+    UIImage *imgIco3 = [UIImage imageNamed:@"icons_takephoto-info-mb"];
+    UIImageView *icoView3 = [[UIImageView alloc] initWithImage:imgIco3];
+    icoView3.center = CGPointMake(26, 116);
+    
+    UIImage *imgIco4 = [UIImage imageNamed:@"icons_takephoto-info-cloud"];
+    UIImageView *icoView4 = [[UIImageView alloc] initWithImage:imgIco4];
+    icoView4.center = CGPointMake(26, 161);
+    
+    UIImage *imgIco5 = [UIImage imageNamed:@"icons_takephoto-info-location"];
+    UIImageView *icoView5 = [[UIImageView alloc] initWithImage:imgIco5];
+    icoView5.center = CGPointMake(200, 26);
+    
+    NSArray *iconSubArray;
+    iconSubArray = [NSArray arrayWithObjects: icoView1, icoView2, icoView3, icoView4, icoView5, nil];
+    for (int i = 0; i < [iconSubArray count]; i++) {
+        [infoPanel addSubview:iconSubArray[i]];
+    }
+    
 }
 
 - (void)infoButtonPressed:(id)sender{
@@ -142,9 +162,7 @@
             infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y+100);
             infoPanel.transform = CGAffineTransformMakeScale(1.0, 0.001);
             
-        } completion:^(BOOL finished) {
-           
-        }];
+        } completion:nil];
     }
     else
     {
@@ -162,9 +180,7 @@
             infoPanel.center = CGPointMake(infoPanel.center.x, infoPanel.center.y-100);
             infoPanel.transform = CGAffineTransformMakeScale(1.0, 1.0);
             
-        } completion:^(BOOL finished) {
-            
-        }];
+        } completion:nil];
         
     }
 };
