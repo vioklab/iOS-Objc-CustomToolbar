@@ -117,7 +117,7 @@
 				TargetAttributes = {
 					6CEDB47A1C6F809C00B1F8E7 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = LCAZX8K65P;
+						DevelopmentTeam = 3ZY9LLS26T;
 					};
 				};
 			};
@@ -273,7 +273,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = CustomToolbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bbluue.CustomToolbar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vioklab.CustomToolbar;
 				PRODUCT_NAME = CustomToolbar;
 			};
 			name = Debug;
@@ -285,7 +285,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = CustomToolbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.bbluue.CustomToolbar;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vioklab.CustomToolbar;
 				PRODUCT_NAME = CustomToolbar;
 			};
 			name = Release;
